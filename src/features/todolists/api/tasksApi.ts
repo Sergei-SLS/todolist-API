@@ -16,5 +16,5 @@ export const tasksApi = {
     },
     deleteTask ({todolistId, taskId}: {todolistId: string; taskId: string}) {
         return instance.delete<BaseResponse<{}>>(`/todo-lists/${todolistId}/tasks/${taskId}`)
-    }
+    },
 }

@@ -39,7 +39,12 @@ export const AppHttpRequests = () => {
     })
   }
 
-  const createTask = (todolistId: string, title: string) => {}
+  const createTask = (todolistId: string, title: string) => {
+    tasksApi.createTasks({todolistId, title}).then((res) => {
+      const newTasks = res.data.data.item
+      setTasks({...tasks, [todolistId]: [newTasks, ...(tasks[todolistId] || [])] })
+    })
+  }
 
   const deleteTask = (todolistId: string, taskId: string) => {}
 

@@ -1,6 +1,6 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 
-export const todolistSlice = createSlice({
+export const todolistsSlice = createSlice({
   name: "todolists",
   initialState: [] as Todolist[],
   reducers: (create) => ({
@@ -32,8 +32,8 @@ export const todolistSlice = createSlice({
 })
 
 export const { deleteTodolistAC, createTodolistAC, changeTodolistTitleAC, changeTodolistFilterAC } =
-  todolistSlice.actions
-export const todolistsReducer = todolistSlice.reducer
+  todolistsSlice.actions
+export const todolistsReducer = todolistsSlice.reducer
 
 export type Todolist = {
   id: string

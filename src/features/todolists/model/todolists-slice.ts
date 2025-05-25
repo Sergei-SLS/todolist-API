@@ -1,15 +1,22 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit"
 import { Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
+import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 
 export const todolistsSlice = createSlice({
   name: "todolists",
   initialState: [] as DomainTodolist[],
-  reducers: (create) => ({
-    setTodolistsAC: create.reducer<{ todolists: Todolist[] }>((state, action) => {
-      return action.payload.todolists.map((tl) => {
-        return { ...tl, filter: "all", entityStatus: "idle" }
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTodolistsTC.fulfilled, (_, action) => {
+        return action.payload.todolists.map((tl) => {
+          return { ...tl, filter: "all", entityStatus: "idle" }
+        })
       })
-    }),
+      .addCase(fetchTodolistsTC.rejected, (state, action) => {})
+  },
+
+  reducers: (create) => ({
     deleteTodolistAC: create.reducer<{ id: string }>((state, action) => {
       const index = state.findIndex((todolist) => todolist.id === action.payload.id)
       if (index !== -1) {
@@ -37,18 +44,21 @@ export const todolistsSlice = createSlice({
   }),
 })
 
-export const { setTodolistsAC, deleteTodolistAC, createTodolistAC, changeTodolistTitleAC, changeTodolistFilterAC } =
+export const fetchTodolistsTC = createAsyncThunk(`${todolistsSlice.name}/fetchTodolistsTC`, async (_, thunkAPI) => {
+  try {
+    const res = await todolistsApi.getTodolists()
+    return { todolists: res.data }
+  } catch (error) {
+    return thunkAPI.rejectWithValue(null)
+  }
+})
+
+export const { deleteTodolistAC, createTodolistAC, changeTodolistTitleAC, changeTodolistFilterAC } =
   todolistsSlice.actions
 export const todolistsReducer = todolistsSlice.reducer
 
 export type DomainTodolist = Todolist & {
   filter: FilterValues
 }
-
-// export type Todolist = {
-//   id: string
-//   title: string
-//   filter: FilterValues
-// }
 
 export type FilterValues = "all" | "active" | "completed"

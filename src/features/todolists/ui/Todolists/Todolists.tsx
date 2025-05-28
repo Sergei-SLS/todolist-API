@@ -9,12 +9,6 @@ export const Todolists = () => {
   const todolists = useAppSelector(selectTodolists)
   const dispatch = useAppDispatch()
 
-  // useEffect(() => {
-  //   todolistsApi.getTodolists().then((res) => {
-  //     dispatch(setTodolistsAC({ todolists: res.data }))
-  //   })
-  // }, [])
-
   useEffect(() => {
     dispatch(fetchTodolistsTC())
   }, [])

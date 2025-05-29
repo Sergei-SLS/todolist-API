@@ -41,13 +41,25 @@ export const tasksSlice = createAppSlice({
         },
       },
     ),
-    deleteTaskAC: create.reducer<{ todolistId: string; taskId: string }>((state, action) => {
-      const tasks = state[action.payload.todolistId]
-      const index = tasks.findIndex((task) => task.id === action.payload.taskId)
-      if (index !== -1) {
-        tasks.splice(index, 1)
-      }
-    }),
+    deleteTaskTC: create.asyncThunk(
+      async (payload: { todolistId: string; taskId: string }, thunkAPI) => {
+        try {
+          await tasksApi.deleteTask(payload)
+          return payload
+        } catch (error) {
+          return thunkAPI.rejectWithValue(null)
+        }
+      },
+      {
+        fulfilled: (state, action) => {
+          const tasks = state[action.payload.todolistId]
+          const index = tasks.findIndex((task) => task.id === action.payload.taskId)
+          if (index !== -1) {
+            tasks.splice(index, 1)
+          }
+        },
+      },
+    ),
 
     changeTaskStatusAC: create.reducer<{ todolistId: string; taskId: string; isDone: boolean }>((state, action) => {
       const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
@@ -73,7 +85,7 @@ export const tasksSlice = createAppSlice({
   },
 })
 
-export const { createTaskTC, fetchTasksTC, deleteTaskAC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
+export const { deleteTaskTC, createTaskTC, fetchTasksTC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 export const { selectTasks } = tasksSlice.selectors
 

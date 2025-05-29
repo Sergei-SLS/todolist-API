@@ -1,9 +1,8 @@
 import { createTodolistTC, deleteTodolistTC } from "./todolists-slice.ts"
 import { createAppSlice } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
-import { TaskPriority, TaskStatus } from "@/common/enums/enums.ts"
+import { TaskStatus } from "@/common/enums/enums.ts"
 import { DomainTask } from "../api/tasksApi.types.ts"
-import { nanoid } from "@reduxjs/toolkit"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -27,6 +26,21 @@ export const tasksSlice = createAppSlice({
         },
       },
     ),
+    createTaskTC: create.asyncThunk(
+      async (payload: { todolistId: string; title: string }, thunkAPI) => {
+        try {
+          const res = await tasksApi.createTasks(payload)
+          return { task: res.data.data.item }
+        } catch (error) {
+          return thunkAPI.rejectWithValue(null)
+        }
+      },
+      {
+        fulfilled: (state, action) => {
+          state[action.payload.task.todoListId].unshift(action.payload.task)
+        },
+      },
+    ),
     deleteTaskAC: create.reducer<{ todolistId: string; taskId: string }>((state, action) => {
       const tasks = state[action.payload.todolistId]
       const index = tasks.findIndex((task) => task.id === action.payload.taskId)
@@ -34,21 +48,7 @@ export const tasksSlice = createAppSlice({
         tasks.splice(index, 1)
       }
     }),
-    createTaskAC: create.reducer<{ todolistId: string; title: string }>((state, action) => {
-      const newTask: DomainTask = {
-        description: "",
-        title: action.payload.title,
-        status: TaskStatus.New,
-        priority: TaskPriority.Low,
-        startDate: "",
-        deadline: "",
-        id: nanoid(),
-        todoListId: action.payload.todolistId,
-        order: 0,
-        addedDate: "",
-      }
-      state[action.payload.todolistId].unshift(newTask)
-    }),
+
     changeTaskStatusAC: create.reducer<{ todolistId: string; taskId: string; isDone: boolean }>((state, action) => {
       const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
       if (task) {
@@ -73,7 +73,7 @@ export const tasksSlice = createAppSlice({
   },
 })
 
-export const { fetchTasksTC, deleteTaskAC, createTaskAC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
+export const { createTaskTC, fetchTasksTC, deleteTaskAC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 export const { selectTasks } = tasksSlice.selectors
 

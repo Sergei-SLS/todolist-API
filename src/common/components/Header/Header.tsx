@@ -1,4 +1,4 @@
-import { changeThemeModeAC, selectThemeMode } from "@/app/app-slice.ts"
+import { changeThemeModeAC, selectStatus, selectThemeMode } from "@/app/app-slice.ts"
 
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { containerSx } from "@/common/styles"
@@ -14,6 +14,7 @@ import LinearProgress from "@mui/material/LinearProgress"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
+  const status = useAppSelector(selectStatus)
 
   const dispatch = useAppDispatch()
 
@@ -38,7 +39,7 @@ export const Header = () => {
           </div>
         </Container>
       </Toolbar>
-      <LinearProgress />
+      {status === "loading" && <LinearProgress />}
     </AppBar>
   )
 }

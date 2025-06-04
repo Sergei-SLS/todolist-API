@@ -96,18 +96,6 @@ export const changeTodolistTitleTC = createAsyncThunk(
   },
 )
 
-// export const deleteTodolistTC = createAsyncThunk(
-//   `${todolistsSlice.name}/deleteTodolistTC`,
-//   async (id: string, thunkAPI) => {
-//     try {
-//       await todolistsApi.deleteTodolist(id)
-//       return { id }
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(null)
-//     }
-//   },
-// )
-
 export const { selectTodolists } = todolistsSlice.selectors
 export const { deleteTodolistTC, createTodolistTC, fetchTodolistsTC, changeTodolistFilterAC } = todolistsSlice.actions
 export const todolistsReducer = todolistsSlice.reducer

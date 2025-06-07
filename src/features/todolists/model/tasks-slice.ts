@@ -105,12 +105,42 @@ export const tasksSlice = createAppSlice({
       },
     ),
 
-    changeTaskTitleAC: create.reducer<{ todolistId: string; taskId: string; title: string }>((state, action) => {
-      const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
-      if (task) {
-        task.title = action.payload.title
-      }
-    }),
+    changeTaskTitleTC: create.asyncThunk(
+      async (payload: { todolistId: string; taskId: string; title: string }, thunkAPI) => {
+        const { todolistId, taskId, title } = payload
+
+        const allTodolistTasks = (thunkAPI.getState() as RootState).tasks[todolistId]
+        const task = allTodolistTasks.find((task) => task.id === taskId)
+
+        if (!task) {
+          return thunkAPI.rejectWithValue(null)
+        }
+
+        const model: UpdateTaskModel = {
+          description: task.description,
+          title,
+          status: task.status,
+          priority: task.priority,
+          startDate: task.startDate,
+          deadline: task.deadline,
+        }
+
+        try {
+          const res = await tasksApi.updateTask({ todolistId, taskId, model })
+          return { task: res.data.data.item }
+        } catch (error) {
+          return thunkAPI.rejectWithValue(null)
+        }
+      },
+      {
+        fulfilled: (state, action) => {
+          const task = state[action.payload.task.todoListId].find((task) => task.id === action.payload.task.id)
+          if (task) {
+            task.title = action.payload.task.title
+          }
+        },
+      },
+    ),
   }),
   extraReducers: (builder) => {
     builder
@@ -123,7 +153,7 @@ export const tasksSlice = createAppSlice({
   },
 })
 
-export const { changeTaskStatusTC, deleteTaskTC, createTaskTC, fetchTasksTC, changeTaskTitleAC } = tasksSlice.actions
+export const { changeTaskStatusTC, deleteTaskTC, createTaskTC, fetchTasksTC, changeTaskTitleTC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 export const { selectTasks } = tasksSlice.selectors
 

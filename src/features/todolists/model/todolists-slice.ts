@@ -31,12 +31,15 @@ export const todolistsSlice = createAppSlice({
       },
     ),
     createTodolistTC: create.asyncThunk(
-      async (title: string, thunkAPI) => {
+      async (title: string, { dispatch, rejectWithValue }) => {
         try {
+          dispatch(changeStatusAC({ status: "loading" }))
           const res = await todolistsApi.createTodolist(title)
+          dispatch(changeStatusAC({ status: "succeeded" }))
           return { todolist: res.data.data.item }
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(changeStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {

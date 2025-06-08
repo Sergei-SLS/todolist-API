@@ -49,12 +49,15 @@ export const todolistsSlice = createAppSlice({
       },
     ),
     deleteTodolistTC: create.asyncThunk(
-      async (id: string, thunkAPI) => {
+      async (id: string, { dispatch, rejectWithValue }) => {
         try {
+          dispatch(changeStatusAC({ status: "loading" }))
           await todolistsApi.deleteTodolist(id)
+          dispatch(changeStatusAC({ status: "succeeded" }))
           return { id }
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(changeStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {

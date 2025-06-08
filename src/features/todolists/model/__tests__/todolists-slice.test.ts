@@ -4,7 +4,7 @@ import {
   changeTodolistFilterAC,
   changeTodolistTitleAC,
   createTodolistAC,
-  deleteTodolistAC,
+  deleteTodolistTC,
   type Todolist,
   todolistsReducer,
 } from "../todolists-slice.ts"
@@ -18,13 +18,14 @@ beforeEach(() => {
   todolistId2 = nanoid()
 
   startState = [
-    { id: todolistId1, title: "What to learn", filter: "all" },
-    { id: todolistId2, title: "What to buy", filter: "all" },
+    { id: todolistId1, title: "What to learn", addedDate: "", order: 0, filter: "all" },
+    { id: todolistId2, title: "What to buy", addedDate: "", order: 0, filter: "all" },
   ]
 })
 
 test("correct todolist should be deleted", () => {
-  const endState = todolistsReducer(startState, deleteTodolistAC({ id: todolistId1 }))
+  const action = deleteTodolistTC.fulfilled({ id: todolistId1 }, "requestId", todolistId1)
+  const endState = todolistsReducer(startState, action)
 
   expect(endState.length).toBe(1)
   expect(endState[0].id).toBe(todolistId2)

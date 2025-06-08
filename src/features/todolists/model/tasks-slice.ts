@@ -1,7 +1,6 @@
 import { createTodolistTC, deleteTodolistTC } from "./todolists-slice.ts"
 import { createAppSlice } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
-// import { TaskStatus } from "@/common/enums/enums.ts"
 import { DomainTask, UpdateTaskModel } from "../api/tasksApi.types.ts"
 import { RootState } from "@/app/store.ts"
 import { changeStatusAC } from "@/app/app-slice.ts"
@@ -68,79 +67,6 @@ export const tasksSlice = createAppSlice({
         },
       },
     ),
-    // changeTaskStatusTC: create.asyncThunk(
-    //   async (payload: { todolistId: string; taskId: string; status: TaskStatus }, thunkAPI) => {
-    //     const { todolistId, taskId, status } = payload
-    //
-    //     const allTodolistTasks = (thunkAPI.getState() as RootState).tasks[todolistId]
-    //     const task = allTodolistTasks.find((task) => task.id === taskId)
-    //
-    //     if (!task) {
-    //       return thunkAPI.rejectWithValue(null)
-    //     }
-    //
-    //     const model: UpdateTaskModel = {
-    //       description: task.description,
-    //       title: task.title,
-    //       priority: task.priority,
-    //       startDate: task.startDate,
-    //       deadline: task.deadline,
-    //       status,
-    //     }
-    //
-    //     try {
-    //       const res = await tasksApi.updateTask({ todolistId, taskId, model })
-    //       return { task: res.data.data.item }
-    //     } catch (error) {
-    //       return thunkAPI.rejectWithValue(null)
-    //     }
-    //   },
-    //   {
-    //     fulfilled: (state, action) => {
-    //       const task = state[action.payload.task.todoListId].find((task) => task.id === action.payload.task.id)
-    //       if (task) {
-    //         task.status = action.payload.task.status
-    //       }
-    //     },
-    //   },
-    // ),
-    //
-    // changeTaskTitleTC: create.asyncThunk(
-    //   async (payload: { todolistId: string; taskId: string; title: string }, thunkAPI) => {
-    //     const { todolistId, taskId, title } = payload
-    //
-    //     const allTodolistTasks = (thunkAPI.getState() as RootState).tasks[todolistId]
-    //     const task = allTodolistTasks.find((task) => task.id === taskId)
-    //
-    //     if (!task) {
-    //       return thunkAPI.rejectWithValue(null)
-    //     }
-    //
-    //     const model: UpdateTaskModel = {
-    //       description: task.description,
-    //       title,
-    //       status: task.status,
-    //       priority: task.priority,
-    //       startDate: task.startDate,
-    //       deadline: task.deadline,
-    //     }
-    //
-    //     try {
-    //       const res = await tasksApi.updateTask({ todolistId, taskId, model })
-    //       return { task: res.data.data.item }
-    //     } catch (error) {
-    //       return thunkAPI.rejectWithValue(null)
-    //     }
-    //   },
-    //   {
-    //     fulfilled: (state, action) => {
-    //       const task = state[action.payload.task.todoListId].find((task) => task.id === action.payload.task.id)
-    //       if (task) {
-    //         task.title = action.payload.task.title
-    //       }
-    //     },
-    //   },
-    // ),
     updateTaskTC: create.asyncThunk(
       async (
         payload: { todolistId: string; taskId: string; domainModel: Partial<UpdateTaskModel> },
@@ -177,7 +103,9 @@ export const tasksSlice = createAppSlice({
           const taskList = state[action.payload.task.todoListId]
           const task = taskList.find((t) => t.id === action.payload.task.id)
           if (task) {
-            Object.assign(task, action.payload.task)
+            task.title = action.payload.task.title
+            task.status = action.payload.task.status
+            // Object.assign(task, action.payload.task) - Копировать все перечисляемые свойства из action.payload.task в существующий task внутри состояния Redux.
           }
         },
       },

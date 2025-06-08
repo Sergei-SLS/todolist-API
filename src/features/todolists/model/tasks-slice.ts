@@ -49,12 +49,15 @@ export const tasksSlice = createAppSlice({
       },
     ),
     deleteTaskTC: create.asyncThunk(
-      async (payload: { todolistId: string; taskId: string }, thunkAPI) => {
+      async (payload: { todolistId: string; taskId: string }, { dispatch, rejectWithValue }) => {
         try {
+          dispatch(changeStatusAC({ status: "loading" }))
           await tasksApi.deleteTask(payload)
+          dispatch(changeStatusAC({ status: "succeeded" }))
           return payload
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(changeStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {
@@ -70,7 +73,7 @@ export const tasksSlice = createAppSlice({
     updateTaskTC: create.asyncThunk(
       async (
         payload: { todolistId: string; taskId: string; domainModel: Partial<UpdateTaskModel> },
-        { getState, rejectWithValue },
+        { getState, dispatch, rejectWithValue },
       ) => {
         const { todolistId, taskId, domainModel } = payload
 
@@ -92,9 +95,12 @@ export const tasksSlice = createAppSlice({
         }
 
         try {
+          dispatch(changeStatusAC({ status: "loading" }))
           const res = await tasksApi.updateTask({ todolistId, taskId, model: apiModel })
+          dispatch(changeStatusAC({ status: "succeeded" }))
           return { task: res.data.data.item }
         } catch (error) {
+          dispatch(changeStatusAC({ status: "failed" }))
           return rejectWithValue(null)
         }
       },

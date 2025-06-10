@@ -3,7 +3,8 @@ import { createAppSlice } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { DomainTask, UpdateTaskModel } from "../api/tasksApi.types.ts"
 import { RootState } from "@/app/store.ts"
-import { changeStatusAC } from "@/app/app-slice.ts"
+import { changeStatusAC, setAppErrorAC } from "@/app/app-slice.ts"
+import { ResultCode } from "@/common/enums/enums.ts"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -35,8 +36,18 @@ export const tasksSlice = createAppSlice({
         try {
           dispatch(changeStatusAC({ status: "loading" }))
           const res = await tasksApi.createTasks(payload)
-          dispatch(changeStatusAC({ status: "succeeded" }))
-          return { task: res.data.data.item }
+          if (res.data.resultCode === ResultCode.Success) {
+            dispatch(changeStatusAC({ status: "succeeded" }))
+            return { task: res.data.data.item }
+          } else {
+            if (res.data.messages.length) {
+              dispatch(setAppErrorAC({ error: res.data.messages[0] }))
+            } else {
+              dispatch(setAppErrorAC({ error: "Some error occurred" }))
+            }
+            dispatch(changeStatusAC({ status: "failed" }))
+            return rejectWithValue(null)
+          }
         } catch (error) {
           dispatch(changeStatusAC({ status: "failed" }))
           return rejectWithValue(null)

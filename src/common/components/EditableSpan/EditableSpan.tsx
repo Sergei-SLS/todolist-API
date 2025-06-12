@@ -37,7 +37,7 @@ export const EditableSpan = ({ value, onChange, disable }: Props) => {
           disabled={disable}
         />
       ) : (
-        <span onDoubleClick={disable ? turnOnEditMode : undefined}>{value}</span>
+        <span onDoubleClick={turnOnEditMode}>{value}</span>
       )}
     </>
   )

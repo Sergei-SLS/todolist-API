@@ -58,11 +58,16 @@ export const tasksSlice = createAppSlice({
       async (payload: { todolistId: string; taskId: string }, { dispatch, rejectWithValue }) => {
         try {
           dispatch(changeStatusAC({ status: "loading" }))
-          await tasksApi.deleteTask(payload)
-          dispatch(changeStatusAC({ status: "succeeded" }))
-          return payload
+          const res = await tasksApi.deleteTask(payload)
+
+          if (res.data.resultCode === ResultCode.Success) {
+            return payload
+          } else {
+            handleServerAppError(res.data, dispatch)
+            return rejectWithValue(null)
+          }
         } catch (error) {
-          dispatch(changeStatusAC({ status: "failed" }))
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },

@@ -4,7 +4,7 @@ import { RequestStatus } from "@/common/types"
 export const appSlice = createSlice({
   name: "app",
   initialState: {
-    themeMode: "light" as ThemeMode,
+    themeMode: "dark" as ThemeMode,
     status: "idle" as RequestStatus,
     error: null as string | null,
   },

@@ -44,6 +44,7 @@ export const tasksSlice = createAppSlice({
             return rejectWithValue(null)
           }
         } catch (error) {
+          dispatch(changeStatusAC({ status: "failed" }))
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
@@ -68,6 +69,7 @@ export const tasksSlice = createAppSlice({
             return rejectWithValue(null)
           }
         } catch (error) {
+          dispatch(changeStatusAC({ status: "failed" }))
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
@@ -110,13 +112,14 @@ export const tasksSlice = createAppSlice({
           dispatch(changeStatusAC({ status: "loading" }))
           const res = await tasksApi.updateTask({ todolistId, taskId, model: apiModel })
           if (res.data.resultCode === ResultCode.Success) {
+            dispatch(changeStatusAC({ status: "succeeded" }))
             return { task: res.data.data.item }
           } else {
-            dispatch(changeStatusAC({ status: "succeeded" }))
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
           }
         } catch (error) {
+          dispatch(changeStatusAC({ status: "failed" }))
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }

@@ -5,3 +5,5 @@ export const loginSchema = z.object({
   password: z.string(),
   rememberMe: z.boolean(),
 })
+
+export type LoginInputs = z.infer<typeof loginSchema>

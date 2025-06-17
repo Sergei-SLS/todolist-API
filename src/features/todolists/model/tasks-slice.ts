@@ -61,6 +61,7 @@ export const tasksSlice = createAppSlice({
           const res = await tasksApi.deleteTask(payload)
 
           if (res.data.resultCode === ResultCode.Success) {
+            dispatch(changeStatusAC({ status: "succeeded" }))
             return payload
           } else {
             handleServerAppError(res.data, dispatch)
@@ -111,6 +112,7 @@ export const tasksSlice = createAppSlice({
           if (res.data.resultCode === ResultCode.Success) {
             return { task: res.data.data.item }
           } else {
+            dispatch(changeStatusAC({ status: "succeeded" }))
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
           }

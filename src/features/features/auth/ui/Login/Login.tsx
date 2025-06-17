@@ -9,7 +9,7 @@ import FormGroup from "@mui/material/FormGroup"
 import FormLabel from "@mui/material/FormLabel"
 import Grid from "@mui/material/Grid2"
 import TextField from "@mui/material/TextField"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
 
 export const Login = () => {
@@ -27,6 +27,7 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
     console.log(data)
+    reset()
   }
 
   return (
@@ -68,7 +69,18 @@ export const Login = () => {
             />
             {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
             <TextField type="password" label="Password" margin="normal" {...register("password")} />
-            <FormControlLabel label="Remember me" control={<Checkbox />} {...register("rememberMe")} />
+            <FormControlLabel
+              label="Remember me"
+              control={
+                <Controller
+                  name="rememberMe"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Checkbox onChange={(e) => onChange(e.target.checked)} checked={value} />
+                  )}
+                />
+              }
+            />
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>

@@ -9,7 +9,7 @@ export const domainTaskSchema = z.object({
   id: z.string(),
   todoListId: z.string(),
   order: z.number(),
-  addedDate: z.iso.datetime({ local: true }),
+  addedDate: z.string().datetime({ local: true }),
   status: z.nativeEnum(TaskStatus),
   priority: z.nativeEnum(TaskPriority),
 })

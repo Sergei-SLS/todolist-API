@@ -70,6 +70,7 @@ export const Login = () => {
               error={!!errors.password}
               {...register("password")}
             />
+            {errors.password && <span className={styles.errorMessage}>{errors.password.message}</span>}
             <FormControlLabel
               label="Remember me"
               control={

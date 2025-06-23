@@ -1,4 +1,4 @@
-import { Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
+import { Todolist, todolistSchema } from "@/features/todolists/api/todolistsApi.types.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { changeStatusAC } from "@/app/app-slice.ts"
@@ -17,8 +17,9 @@ export const todolistsSlice = createAppSlice({
         try {
           dispatch(changeStatusAC({ status: "loading" }))
           const res = await todolistsApi.getTodolists()
+          const validatedData = todolistSchema.array().parse(res.data)
           dispatch(changeStatusAC({ status: "succeeded" }))
-          return { todolists: res.data }
+          return { todolists: validatedData }
         } catch (error) {
           dispatch(changeStatusAC({ status: "failed" }))
           return rejectWithValue(null)

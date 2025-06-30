@@ -1,19 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { AUTH_TOKEN } from "@/common/constants"
 import { Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
 import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import { BaseResponse } from "@/common/types"
+import { baseApi } from "@/features/todolists/api/baseApi.ts"
 
-export const todolistsApi = createApi({
-  reducerPath: "todolistsApi",
-  tagTypes: ["Todolist"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    prepareHeaders: (headers) => {
-      headers.set("API-KEY", import.meta.env.VITE_API_KEY)
-      headers.set("Authorization", `Bearer ${localStorage.getItem(AUTH_TOKEN)}`)
-    },
-  }),
+export const todolistsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getTodolists: build.query<any[], void>({
       query: () => "todo-lists",

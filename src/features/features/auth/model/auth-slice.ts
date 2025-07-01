@@ -5,7 +5,6 @@ import { AUTH_TOKEN } from "@/common/constants"
 import { changeStatusAC } from "@/app/app-slice"
 import { ResultCode } from "@/common/enums/enums.ts"
 import { clearDataAC } from "@/common/actions"
-import { PayloadAction } from "@reduxjs/toolkit"
 
 export const authSlice = createAppSlice({
   name: "auth",
@@ -85,7 +84,7 @@ export const authSlice = createAppSlice({
         },
       },
     ),
-    setIsLoggedInAC: create.reducer((state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+    setIsLoggedInAC: create.reducer<{ isLoggedIn: boolean }>((state, action) => {
       state.isLoggedIn = action.payload.isLoggedIn
     }),
   }),

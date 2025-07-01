@@ -1,10 +1,11 @@
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { LoginInputs } from "@/features/features/auth/lib/schemas"
-import { authApi } from "@/features/features/auth/api/authApi.ts"
+import { authApi } from "@/features/features/auth/api/_authApi.ts"
 import { AUTH_TOKEN } from "@/common/constants"
 import { changeStatusAC } from "@/app/app-slice"
 import { ResultCode } from "@/common/enums/enums.ts"
 import { clearDataAC } from "@/common/actions"
+import { PayloadAction } from "@reduxjs/toolkit"
 
 export const authSlice = createAppSlice({
   name: "auth",
@@ -84,9 +85,12 @@ export const authSlice = createAppSlice({
         },
       },
     ),
+    setIsLoggedInAC: create.reducer((state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+      state.isLoggedIn = action.payload.isLoggedIn
+    }),
   }),
 })
 
 export const { selectIsLoggedIn } = authSlice.selectors
-export const { loginTC, logoutTC, initializeAppTC } = authSlice.actions
+export const { loginTC, logoutTC, initializeAppTC, setIsLoggedInAC } = authSlice.actions
 export const authReducer = authSlice.reducer

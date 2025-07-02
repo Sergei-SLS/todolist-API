@@ -1,4 +1,4 @@
-import { changeThemeModeAC, selectStatus, selectThemeMode, setIsLoggedInAC } from "@/app/app-slice.ts"
+import { changeThemeModeAC, selectIsLoggedIn, selectStatus, selectThemeMode, setIsLoggedInAC } from "@/app/app-slice.ts"
 
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { containerSx } from "@/common/styles"
@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
 import LinearProgress from "@mui/material/LinearProgress"
-import { selectIsLoggedIn } from "@/features/features/auth/model/auth-slice.ts"
+
 import { ResultCode } from "@/common/enums/enums.ts"
 import { clearDataAC } from "@/common/actions"
 import { useLogoutMutation } from "@/features/features/auth/api/authApi.ts"

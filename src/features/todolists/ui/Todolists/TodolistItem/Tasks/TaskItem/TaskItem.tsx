@@ -1,6 +1,4 @@
 import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan"
-import { useAppDispatch } from "@/common/hooks"
-import { deleteTaskTC, updateTaskTC } from "@/features/todolists/model/tasks-slice.ts"
 import DeleteIcon from "@mui/icons-material/Delete"
 import Checkbox from "@mui/material/Checkbox"
 import IconButton from "@mui/material/IconButton"
@@ -10,7 +8,7 @@ import { getListItemSx } from "./TaskItem.styles"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types"
 import { TaskStatus } from "@/common/enums/enums.ts"
 import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
-import { useDeleteTaskMutation } from "@/features/todolists/api/tasksApi.ts"
+import { useDeleteTaskMutation, useUpdateTaskMutation } from "@/features/todolists/api/tasksApi.ts"
 
 type Props = {
   task: DomainTask
@@ -19,9 +17,8 @@ type Props = {
 }
 
 export const TaskItem = ({ task, todolistId, todolist }: Props) => {
-  const dispatch = useAppDispatch()
-
   const [removeTask] = useDeleteTaskMutation()
+  const [updateTask] = useUpdateTaskMutation()
 
   const deleteTask = () => {
     removeTask({ todolistId, taskId: task.id })
@@ -29,17 +26,33 @@ export const TaskItem = ({ task, todolistId, todolist }: Props) => {
 
   const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
     const newStatusValue = e.currentTarget.checked
-    dispatch(
-      updateTaskTC({
-        todolistId,
-        taskId: task.id,
-        domainModel: { status: newStatusValue ? TaskStatus.Completed : TaskStatus.New },
-      }),
-    )
+    updateTask({
+      todolistId,
+      taskId: task.id,
+      model: {
+        title: task.title,
+        description: task.description,
+        status: newStatusValue ? TaskStatus.Completed : TaskStatus.New,
+        priority: task.priority,
+        startDate: task.startDate,
+        deadline: task.deadline,
+      },
+    })
   }
 
   const changeTaskTitle = (title: string) => {
-    dispatch(updateTaskTC({ todolistId, taskId: task.id, domainModel: { title } }))
+    updateTask({
+      todolistId,
+      taskId: task.id,
+      model: {
+        title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        startDate: task.startDate,
+        deadline: task.deadline,
+      },
+    })
   }
 
   const isTaskCompleted = task.status === TaskStatus.Completed

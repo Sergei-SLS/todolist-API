@@ -1,6 +1,6 @@
 import { createTodolistTC, deleteTodolistTC } from "./todolists-slice.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
-import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
+import { tasksApi } from "@/features/todolists/api/_tasksApi.ts"
 import { DomainTask, domainTaskSchema, UpdateTaskModel } from "../api/tasksApi.types.ts"
 import { RootState } from "@/app/store.ts"
 import { changeStatusAC } from "@/app/app-slice.ts"

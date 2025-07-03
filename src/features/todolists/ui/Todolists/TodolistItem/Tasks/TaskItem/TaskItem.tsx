@@ -10,6 +10,7 @@ import { getListItemSx } from "./TaskItem.styles"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types"
 import { TaskStatus } from "@/common/enums/enums.ts"
 import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
+import { useDeleteTaskMutation } from "@/features/todolists/api/tasksApi.ts"
 
 type Props = {
   task: DomainTask
@@ -20,8 +21,10 @@ type Props = {
 export const TaskItem = ({ task, todolistId, todolist }: Props) => {
   const dispatch = useAppDispatch()
 
+  const [removeTask] = useDeleteTaskMutation()
+
   const deleteTask = () => {
-    dispatch(deleteTaskTC({ todolistId, taskId: task.id }))
+    removeTask({ todolistId, taskId: task.id })
   }
 
   const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {

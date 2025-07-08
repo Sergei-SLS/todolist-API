@@ -1,5 +1,4 @@
 import { changeThemeModeAC, selectIsLoggedIn, selectStatus, selectThemeMode, setIsLoggedInAC } from "@/app/app-slice.ts"
-
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { containerSx } from "@/common/styles"
 import { getTheme } from "@/common/theme"
@@ -11,11 +10,10 @@ import IconButton from "@mui/material/IconButton"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
 import LinearProgress from "@mui/material/LinearProgress"
-
 import { ResultCode } from "@/common/enums/enums.ts"
-import { clearDataAC } from "@/common/actions"
 import { useLogoutMutation } from "@/features/features/auth/api/authApi.ts"
 import { AUTH_TOKEN } from "@/common/constants"
+import { baseApi } from "@/features/todolists/api/baseApi.ts"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -36,7 +34,7 @@ export const Header = () => {
       if (res.data?.resultCode === ResultCode.Success) {
         dispatch(setIsLoggedInAC({ isLoggedIn: false }))
         localStorage.removeItem(AUTH_TOKEN)
-        dispatch(clearDataAC())
+        dispatch(baseApi.util.resetApiState())
       }
     })
   }

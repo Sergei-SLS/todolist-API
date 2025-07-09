@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { AUTH_TOKEN } from "@/common/constants"
 import { setAppErrorAC } from "@/app/app-slice.ts"
+import { isErrorWithMessage } from "@/common/utils"
 
 export const baseApi = createApi({
   reducerPath: "todolistsApi",
@@ -21,11 +22,14 @@ export const baseApi = createApi({
       if (result.error.status === 403) {
         api.dispatch(setAppErrorAC({ error: "403 Forbidden Error. Check API-KEY" }))
       }
-      if (result.error.status === 400) {
-        api.dispatch(setAppErrorAC({ error: (result.error.data as { message: string }).message }))
+      if (result.error.status === 400 || result.error.status === 500) {
+        if (isErrorWithMessage(result.error.data)) {
+          api.dispatch(setAppErrorAC({ error: result.error.data.message }))
+        } else {
+          api.dispatch(setAppErrorAC({ error: JSON.stringify(result.error.data) }))
+        }
       }
     }
-
     return result
   },
   endpoints: () => ({}),

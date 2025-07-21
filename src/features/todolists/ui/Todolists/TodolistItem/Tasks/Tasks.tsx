@@ -1,12 +1,12 @@
 import { TaskItem } from "./TaskItem/TaskItem"
 import List from "@mui/material/List"
-import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import { TaskStatus } from "@/common/enums/enums"
 import { useGetTasksQuery } from "@/features/todolists/api/tasksApi.ts"
 import { TasksSkeleton } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksSkeleton/TasksSkeleton.tsx"
 import { setAppErrorAC } from "@/app/app-slice.ts"
 import { useDispatch } from "react-redux"
 import { useEffect } from "react"
+import { DomainTodolist } from "@/features/todolists/lib/types"
 
 type Props = {
   todolist: DomainTodolist

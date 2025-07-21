@@ -21,7 +21,7 @@ export const tasksApi = baseApi.injectEndpoints({
         url: `/todo-lists/${todolistId}/tasks/${taskId}`,
         body: model,
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: (_res, _err, { taskId }) => [{ type: "Task", id: taskId }],
     }),
     deleteTask: builder.mutation<BaseResponse<{}>, { todolistId: string; taskId: string }>({
       query: ({ todolistId, taskId }) => ({

@@ -39,7 +39,7 @@ export const Tasks = ({ todolist }: Props) => {
     return <TasksSkeleton />
   }
 
-  const todolistTasks = data?.items ?? []
+  const todolistTasks = (isFetching ? currentData?.items : data?.items) ?? []
   let filteredTasks = todolistTasks
   if (filter === "active") {
     filteredTasks = todolistTasks.filter((task) => task.status === TaskStatus.New)

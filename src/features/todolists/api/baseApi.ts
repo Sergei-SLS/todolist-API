@@ -6,6 +6,9 @@ import { isErrorWithMessage } from "@/common/utils"
 export const baseApi = createApi({
   reducerPath: "todolistsApi",
   tagTypes: ["Todolist", "Task"],
+  keepUnusedDataFor: 5,
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
   baseQuery: async (args, api, extraOptions) => {
     const result = await fetchBaseQuery({
       baseUrl: import.meta.env.VITE_BASE_URL,

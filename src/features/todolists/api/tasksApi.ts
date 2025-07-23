@@ -25,6 +25,21 @@ export const tasksApi = baseApi.injectEndpoints({
         url: `/todo-lists/${todolistId}/tasks/${taskId}`,
         body: model,
       }),
+      async onQueryStarted({ todolistId, taskId, model }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          tasksApi.util.updateQueryData("getTasks", { todolistId, params: { page: 1 } }, (state) => {
+            const index = state.items.findIndex((task) => task.id === taskId)
+            if (index !== -1) {
+              state.items[index] = { ...state.items[index], ...model }
+            }
+          }),
+        )
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+        }
+      },
       invalidatesTags: (_res, _err, { todolistId }) => [{ type: "Task", id: todolistId }],
     }),
     deleteTask: builder.mutation<BaseResponse<{}>, { todolistId: string; taskId: string }>({

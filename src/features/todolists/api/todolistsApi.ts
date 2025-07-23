@@ -27,9 +27,9 @@ export const todolistsApi = baseApi.injectEndpoints({
       async onQueryStarted(id: string, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {
-            const todolist = state.find((todolist) => todolist.id === id)
-            if (todolist) {
-              todolist.entityStatus = "loading"
+            const index = state.findIndex((todolist) => todolist.id === id)
+            if (index !== -1) {
+              state.splice(index, 1)
             }
           }),
         )

@@ -20,6 +20,12 @@ export const authApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    getCaptcha: build.query<BaseResponse, void>({
+      query: () => ({
+        url: "auth/login",
+        method: "POST",
+      }),
+    }),
   }),
 })
 

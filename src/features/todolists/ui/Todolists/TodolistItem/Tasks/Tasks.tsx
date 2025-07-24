@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import { DomainTodolist } from "@/features/todolists/lib/types"
 import { TasksPagination } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksPagination/TaskPagination.tsx"
+import { PAGE_SIZE } from "@/common/constants"
 
 type Props = {
   todolist: DomainTodolist
@@ -22,6 +23,13 @@ export const Tasks = ({ todolist }: Props) => {
     todolistId: id,
     params: { page },
   })
+
+  useEffect(() => {
+    const maxPage = Math.max(1, Math.ceil((data?.totalCount ?? 0) / PAGE_SIZE))
+    if (page > maxPage) {
+      setPage(maxPage)
+    }
+  }, [data?.totalCount, page])
 
   const dispatch = useDispatch()
 

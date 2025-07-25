@@ -17,9 +17,10 @@ import { LoginInputs } from "@/features/features/auth/lib/schemas/loginSchema.ts
 
 import { Navigate } from "react-router"
 import { Path } from "@/common/routing/Routing.tsx"
-import { useLoginMutation } from "@/features/features/auth/api/authApi.ts"
+import { useGetCaptchaQuery, useLoginMutation } from "@/features/features/auth/api/authApi.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 import { AUTH_TOKEN } from "@/common/constants"
+import { useState } from "react"
 
 export const Login = () => {
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
@@ -30,6 +31,9 @@ export const Login = () => {
   const [login] = useLoginMutation()
 
   const [showCaptcha, setShowCaptcha] = useState(false)
+  const { data: captchaData, refetch } = useGetCaptchaQuery(undefined, {
+    skip: !showCaptcha,
+  })
 
   const dispatch = useAppDispatch()
 
@@ -44,14 +48,19 @@ export const Login = () => {
     defaultValues: { email: "", password: "", rememberMe: false },
   })
 
-  const onSubmit: SubmitHandler<LoginInputs> = (data) => {
-    login(data).then((res) => {
-      if (res.data?.resultCode === ResultCode.Success) {
-        dispatch(setIsLoggedInAC({ isLoggedIn: true }))
-        localStorage.setItem(AUTH_TOKEN, res.data.data.token)
-        reset()
-      }
-    })
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+    const res = await login(data)
+    const result = "data" in res ? res.data : undefined
+
+    if (result?.resultCode === ResultCode.Success) {
+      dispatch(setIsLoggedInAC({ isLoggedIn: true }))
+      localStorage.setItem(AUTH_TOKEN, result.data.token)
+      reset()
+    }
+    if (result?.resultCode === ResultCode.CaptchaIsRequired) {
+      setShowCaptcha(true)
+      refetch()
+    }
   }
 
   if (isLoggedIn) {

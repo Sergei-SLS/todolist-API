@@ -57,7 +57,7 @@ export const Login = () => {
       localStorage.setItem(AUTH_TOKEN, result.data.token)
       reset()
     }
-    if (result?.resultCode === ResultCode.CaptchaIsRequired) {
+    if (result?.resultCode === ResultCode.CaptchaError) {
       setShowCaptcha(true)
       refetch()
     }
@@ -114,6 +114,13 @@ export const Login = () => {
                 />
               }
             />
+            {showCaptcha && captchaData?.url && (
+              <>
+                <img src={captchaData.url} alt="captcha" style={{ marginTop: "1rem" }} />
+                <TextField label="Enter captcha" margin="normal" error={!!errors.captcha} {...register("captcha")} />
+                {errors.captcha && <span className={styles.errorMessage}>{errors.captcha.message}</span>}
+              </>
+            )}
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>

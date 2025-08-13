@@ -42,6 +42,7 @@ export const Login = () => {
     handleSubmit,
     reset,
     control,
+    setError,
     formState: { errors },
   } = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
@@ -60,6 +61,11 @@ export const Login = () => {
     if (result?.resultCode === ResultCode.CaptchaError) {
       setShowCaptcha(true)
       refetch()
+    } else if (result?.resultCode === ResultCode.Error) {
+      setError("password", {
+        type: "manual",
+        message: result?.messages?.[0] || "Invalid email or password",
+      })
     }
   }
 

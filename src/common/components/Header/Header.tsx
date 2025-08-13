@@ -1,9 +1,7 @@
 import { changeThemeModeAC, selectIsLoggedIn, selectStatus, selectThemeMode, setIsLoggedInAC } from "@/app/app-slice.ts"
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { containerSx } from "@/common/styles"
-import { getTheme } from "@/common/theme"
 import { NavButton } from "@/common/components/NavButton/NavButton"
-import MenuIcon from "@mui/icons-material/Menu"
 import AppBar from "@mui/material/AppBar"
 import Container from "@mui/material/Container"
 import IconButton from "@mui/material/IconButton"
@@ -23,7 +21,7 @@ export const Header = () => {
 
   const dispatch = useAppDispatch()
 
-  const theme = getTheme(themeMode)
+  // const theme = getTheme(themeMode)
 
   const changeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
@@ -46,12 +44,10 @@ export const Header = () => {
     <AppBar position="static" sx={{ mb: "30px" }}>
       <Toolbar>
         <Container maxWidth={"lg"} sx={containerSx}>
-          <IconButton color="inherit">
-            <MenuIcon />
-          </IconButton>
+          <IconButton color="inherit">{/*<MenuIcon />*/}</IconButton>
           <div>
             {isLoggedIn && <NavButton onClick={logoutHandler}>Sign out</NavButton>}
-            <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+            {/*<NavButton background={theme.palette.primary.dark}>Faq</NavButton>*/}
             <Switch color={"default"} onChange={changeMode} />
           </div>
         </Container>

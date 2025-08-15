@@ -1,4 +1,4 @@
-# Todo list app built with React/Redux/TS
+# Todolist app built with React/Redux/TS
 
 ## Description
 
@@ -17,13 +17,13 @@ Check out the live demo here: [TodoList App Demo](https://sergei-sls.github.io/t
   - All
   - Active
   - Completed
-- State management with Redux
 
 ## Tech Stack
 
 - [TypeScript](https://www.typescriptlang.org/)
 - [React](https://reactjs.org/)
 - [React Hook Form](https://react-hook-form.com/)
+- [React Router](https://reactrouter.com/)
 - [Redux](https://redux.js.org/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Vite](https://vite.dev/)
